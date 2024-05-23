@@ -5,3 +5,4 @@ __pycache__
 .DS_Store
 pyrightconfig.json
 .streamlit/poshdb.pem
+database.cpython-312.pyc

@@ -1,10 +1,9 @@
-
 import streamlit as st
 from streamlit_option_menu import option_menu
 import calendar
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
-from database import *
+from backends.database import *
 
 
 # ---------------Settings -----------------

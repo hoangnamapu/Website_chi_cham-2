@@ -8,7 +8,7 @@
         Home.py
         .streamlit/
             config.toml
-            secrets.toml
+            secrets.toml #store api key, and api url
         pages/
             1_Page_Name_1.py
             2_Page_Name_2.py
@@ -24,7 +24,7 @@
 '''
 
 import streamlit as st
-from database import init_connection, get_client, signup
+from backends.database import init_connection, get_client, signup
 
 # ---------------Settings -----------------
 

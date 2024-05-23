@@ -9,7 +9,7 @@
     connecting to the database, which is then used to fetch/write/update database.
 '''
 from supabase import create_client
-from datetime import datetime
+from datetime import date
 import toml
 
 #@st.cache_resource
@@ -55,7 +55,7 @@ def update_point(phone):
 def add_checkin(phone, services):
     conn = init_connection()
     try:
-        data, _ = conn.table("Check_in").insert({"Phone_Number": phone, "Service": services, "Date": date}).execute()
+        data, _ = conn.table("Check_in").insert({"Phone_Number": phone, "Service": services, "Date": date.today()}).execute()
         return True
     except:
         return False
@@ -70,13 +70,11 @@ def add_checkin(phone, services):
 
 # Chú ý, function này ko nên nằm ở file này.
 def checkin(phone, services):
-    conn = init_connection()
     check = get_client(phone)
-    date = datetime.today()
     if check != None:
         add_checkin(phone, services)
         update_point(phone)
-        return True
+        return "Success"
     else:
         return "Please sign up"
 

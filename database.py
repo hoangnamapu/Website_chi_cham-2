@@ -51,23 +51,36 @@ def update_point(phone):
 #function này ko nên ở file này, vì ko phải thuần database,
 #và nó có thể viết lại bằng cách call lại những functions ở trên.
 # nên add function to add_checkin(phone) như ở dưới
-'''
-def add_checkin(phone, services):
-    data, _ = conn.table("Check_in").insert({"Phone_Number": phone, "Service": services, "Date": date}).execute()
 
-'''
+def add_checkin(phone, services):
+    conn = init_connection()
+    try:
+        data, _ = conn.table("Check_in").insert({"Phone_Number": phone, "Service": services, "Date": date}).execute()
+        return True
+    except:
+        return False
+
+# Khi đó, function này đc viết lại với logic như sau:
+    # check for client ìnfo,
+    # ìf found,
+        # add to checkin
+        # update point
+    # else,
+        # prompt user to signup
+
+# Chú ý, function này ko nên nằm ở file này.
 def checkin(phone, services):
-    point = 0
     conn = init_connection()
     check = get_client(phone)
     date = datetime.today()
-    if check:
-        data, _ = conn.table("Check_in").insert({"Phone_Number": phone, "Service": services, "Date": date}).execute()
+    if check != None:
+        add_checkin(phone, services)
         update_point(phone)
-        return data[1]
+        return True
     else:
         return "Please sign up"
 
+# tương tự check in
 def signup(fname, lname, dob, phone):
     conn = init_connection()
     check = get_client(phone)
@@ -82,5 +95,6 @@ def main():
     services = "Full_set"
     client = checkin(phone, services)
     print(client)
+
 if __name__ == "__main__":
     main()

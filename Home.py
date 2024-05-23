@@ -1,3 +1,28 @@
+'''
+- Trong multipage app, ngoại trừ trang chủ chính (home or main), những trang còn lại phải ở trong folder pages:
+- Ngoài ra, những files backends, hoặc templates, components, media (images, video, text data
+) nên group vào chung từng folders.
+
+    Ví dụ:
+    project_directory/
+        Home.py
+        .streamlit/
+            config.toml
+            secrets.toml
+        pages/
+            1_Page_Name_1.py
+            2_Page_Name_2.py
+        backends/
+            database.py
+            message.py
+        components/
+            ...
+        static/
+            logo.svg
+            content.toml
+            ...
+'''
+
 import streamlit as st
 from database import init_connection, get_client, signup
 

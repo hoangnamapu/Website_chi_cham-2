@@ -4,6 +4,9 @@ import calendar
 from datetime import datetime
 from streamlit_autorefresh import st_autorefresh
 from backends.database import *
+from pages.Check_In import *
+from pages.Sign_Up import *
+import subprocess
 
 
 # ---------------Settings -----------------
@@ -26,6 +29,54 @@ st.title("Welcome to Posh Nail Lounge")
 # ----- Drop down for selecting period ----
 years = [datetime.today().year - 1, datetime.today().year, datetime.today().year + 1]
 months = list(calendar.month_name[1:])
+
+
+st.header("Sign Up")
+with st.form("signup_form", clear_on_submit=True):
+    options = (
+        "Pedicure",
+        "Reg. Manicure",
+        "Gel Manicure",
+        "Liquiq full set",
+        "Liquiq Fill",
+        "Full set",
+        "Fill",
+        "Dip",
+        "Wax",
+    )
+
+    col1, col2 = st.columns(2)
+    col1.text_input(
+        label="First name",
+        value="",
+        placeholder="Pretty",
+        max_chars=20,
+        key="fname",
+    )
+    col2.text_input(
+        label="Last Name",
+        value="",
+        placeholder="Bella",
+        max_chars=20,
+        key="lname",
+    )
+    st.text_input(
+        label="Phone Number",
+        value="",
+        placeholder="(480) 590-6703",
+        max_chars=10,
+        key="phone",
+    )
+    st.date_input(
+        label="Birthdate", value=None, format="YYYY-MM-DD", key="birthdate"
+    )
+    st.multiselect(
+        label="Today Services",
+        options=options,
+        default=None,
+        placeholder="Choose your service(s)",
+        key="services",
+    )
 
 # ----- HIDE Streamlit Style --------------
 
@@ -57,8 +108,7 @@ selected = option_menu(
     icons=["box-arrow-in-left", "plus-square"],
     orientation="horizontal",
 )
-_count = st_autorefresh(interval=2500, limit=None, key="CheckInRefresh")
-# ------- Input & Save periods ----
+
 if selected == "Check In":
     st.header("Check In")
     with st.form("checkin_form", clear_on_submit=True):
@@ -87,9 +137,8 @@ if selected == "Check In":
             placeholder="Choose your service(s)",
             key="services",
         )
-
-        submitted = st.form_submit_button("Enter", type="primary")
-        if submitted:
+    submitted = st.form_submit_button("Enter", type="primary")
+    if submitted:
             phone = st.session_state.phone
             services = st.session_state.services
             if not phone.isnumeric() or not len(phone) == 10:
@@ -97,18 +146,17 @@ if selected == "Check In":
                     f"{phone}: Please enter a valid 10-digit phone number.", icon="⚠️"
                 )
             else:
-                results = checkin(phone=phone, services=services)
-                if results != None and results != -1:
+                results = add_checkin(phone=phone, services=services)
+                if results != "Please Sign Up" and results != "Check In Unsuccessfully":
                     st.success(
                         f"Welcome, {results[0]}! You have {results[1]} points.",
                         icon="🥳",
                     )
-                if results == None:
+                if results == "Please Sign Up":
                     st.warning(f"{phone}: New Client. Please sign up.", icon="🙏")
-                if results == -1:
+                if results == "Check In Unsuccessfully":
                     st.error("Update error. Please retry.", icon="⚠️")
 
-# ------- Display periods -----------
 if selected == "Sign Up":
 
     st.header("Sign Up")
@@ -157,8 +205,8 @@ if selected == "Sign Up":
             placeholder="Choose your service(s)",
             key="services",
         )
-        submitted = st.form_submit_button("Submit", type="primary")
-        if submitted:
+    submitted = st.form_submit_button("Submit", type="primary")
+    if submitted:
             valid = True
             fname = st.session_state["fname"]
             lname = st.session_state["lname"]
@@ -192,12 +240,6 @@ if selected == "Sign Up":
             if not client[3]:
                 st.error(f"{client[3]}: Please set your birthdate.", icon="⚠️")
                 valid = False
-
             if valid:
-                r, c = signup(fname, lname, dob, phone)
-                if r == 1:
-                    st.success(f"Welcome, {client[1]}! You have 1 points.", icon="🥳")
-                if r == -1:
-                    st.error("Update error. Please retry.", icon="⚠️")
-                if r == 0:
-                    st.success(f"Welcome, {c[0]}! You have {c[1]} points.", icon="🥳")
+                result = signup("fname","lname","dob","phone")
+_count = st_autorefresh(interval=2500, limit=None, key="CheckInRefresh")

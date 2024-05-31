@@ -24,7 +24,7 @@
 '''
 
 import streamlit as st
-from backends.database import init_connection, get_client, signup
+from backends.database import init_connection, get_client
 
 # ---------------Settings -----------------
 
@@ -56,14 +56,7 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 with st.container(border=True):
-    rows = get_client("6027238354")
-    st.write(rows)
-    # st.page_link(
-    #     "pages/1_Check_In.py", label="Go to Check In", use_container_width=True
-    # )
-    # st.page_link(
-    #     "pages/2_Dashboard.py", label="Go to Dashboard", use_container_width=True
-    # )env
+
     st.link_button(
         label="Go to Check In",
         url="/Check_In",
@@ -71,8 +64,8 @@ with st.container(border=True):
         type="primary",
     )
     st.link_button(
-        label="Go to Dashboard",
-        url="/Dashboard",
+        label="Go to Option",
+        url="/Option",
         use_container_width=True,
         type="primary",
     )

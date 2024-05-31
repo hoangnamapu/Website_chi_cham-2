@@ -56,7 +56,10 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 with st.container(border=True):
+<<<<<<< HEAD
 
+=======
+>>>>>>> f5dac2557cc797b6aef939ae10976613cea6fe47
     st.link_button(
         label="Go to Check In",
         url="/Check_In",
